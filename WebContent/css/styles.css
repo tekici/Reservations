@@ -1,0 +1,24 @@
+@charset "ISO-8859-1";
+
+#mainframe{
+	width : 800px;
+	margin: auto;
+}
+
+#top{
+	width : 100%;
+	height: 50px;
+	z-index: 100;
+	top:0;
+	background-color: #13654a;
+	
+}
+
+#content{
+	
+}
+
+#bottom{
+	
+	
+}

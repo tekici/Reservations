@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:p="http://primefaces.org/ui"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core">
+<h:head></h:head>
+<h:body>
+    <div>
+    <div style = "width:%33"></div>
+    <div style = "width:%33">
+    	<h:form>
+		    <h:panelGrid columns="4" cellpadding="5">
+		    	<div>
+			        <h:outputLabel for="nameText" value="ID:" style="font-weight:bold" />
+			        <p:inputText id="nameText" value="#{reservation.name}" />
+		        </div>
+			        <h:outputLabel for="resNum" value="Res No:" style="font-weight:bold" />
+			        <p:inputText id="resNum" value="#{reservation.reservationNumber}" />
+			    <div>    
+			        <p:commandButton value="Save" action="#{reservation.saveReservation}" update="nameText,resNum,warningLabel" icon="ui-icon-check" />		        
+			        <p:commandButton value="Get" action="#{reservation.getReservationByResNum()}" update="nameText,resNum,warningLabel" icon="ui-icon-check" />
+			        <p:commandButton value="Update" action="#{reservation.updateReservation()}" update="nameText,resNum,warningLabel" icon="ui-icon-check" />
+			    </div>    
+			    <div>    
+		        	<p:commandButton value= "New Reservation" action="#{reservation.navigateToNewReservation()}">
+		        	</p:commandButton> 
+		        </div>
+		        <div>
+   					<h:outputLabel id="warningLabel"  value="#{reservation.warningText}" />
+	    		</div>  
+		    </h:panelGrid>
+	</h:form>
+    
+    </div>
+    <div style = "width:%33"></div>    
+    </div>
+    
+ </h:body>
+ </html>

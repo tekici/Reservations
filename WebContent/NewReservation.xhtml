@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:p="http://primefaces.org/ui"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+</h:head>
+<h:body>
+<h:form>
+    <div>
+	    <div>
+    		<h:outputLabel for="nameText" value="Name:" style="font-weight:bold" />
+	        <p:inputText id="nameText" value="#{reservation.name}" />
+	    </div>
+	    <div>	    	
+	        <h:outputLabel for="surnameText" value="Surname:" style="font-weight:bold" />
+	        <p:inputText id="surnameText" value="#{reservation.surname}" />			    
+	    </div>
+	    <div>
+	    	        
+   	        <h:outputLabel for="docID" value="Document Number:" style="font-weight:bold" />    	  
+   	        <p:inputText id="docID" value="#{reservation.documentId}" />   
+	    </div>
+	    <div>
+    		<p:commandButton value="Save" action="#{reservation.saveReservation}" update="warningLabel" icon="ui-icon-check" />	
+   	        <p:commandButton value= "Show Reservation" action="#{reservation.navigateToShowReservation}">
+   	        </p:commandButton>
+	    </div>
+	    <div>
+   			<h:outputLabel id="warningLabel"  value="#{reservation.warningText}" />
+	    </div>    
+    </div>
+</h:form>    
+ </h:body>
+ </html>
