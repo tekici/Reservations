@@ -10,9 +10,13 @@
 	<link rel="stylesheet" media="screen" href="css/styles.css"  type="text/css" />
 </h:head>
 	<h:body>
+
 	<div id = "mainframe">
 		<div id = "top">
-			<ui:insert name="top">Here is the Top</ui:insert>
+			<ui:insert name="top"></ui:insert>
+			<p:commandButton value= "New Reservation" action="#{reservation.navigateToNewReservation()}"/> 		
+		    <p:commandButton value= "Show Reservation" action="#{reservation.navigateToShowReservation()}"/>
+        	<p:commandButton value= "Modify Reservation" action="ShowReservation"/>
 		</div>
 
 		<div>

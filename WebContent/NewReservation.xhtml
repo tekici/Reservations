@@ -3,34 +3,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 xmlns:p="http://primefaces.org/ui"
 xmlns:h="http://java.sun.com/jsf/html"
-xmlns:f="http://java.sun.com/jsf/core">
+xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
 </h:head>
 <h:body>
+<ui:composition template="template.xhtml">
+<ui:define name = "content">
 <h:form>
-    <div>
-	    <div>
-    		<h:outputLabel for="nameText" value="Name:" style="font-weight:bold" />
-	        <p:inputText id="nameText" value="#{reservation.name}" />
-	    </div>
-	    <div>	    	
-	        <h:outputLabel for="surnameText" value="Surname:" style="font-weight:bold" />
-	        <p:inputText id="surnameText" value="#{reservation.surname}" />			    
-	    </div>
-	    <div>
-	    	        
-   	        <h:outputLabel for="docID" value="Document Number:" style="font-weight:bold" />    	  
-   	        <p:inputText id="docID" value="#{reservation.documentId}" />   
-	    </div>
-	    <div>
-    		<p:commandButton value="Save" action="#{reservation.saveReservation}" update="warningLabel" icon="ui-icon-check" />	
-   	        <p:commandButton value= "Show Reservation" action="#{reservation.navigateToShowReservation}">
-   	        </p:commandButton>
-	    </div>
-	    <div>
-   			<h:outputLabel id="warningLabel"  value="#{reservation.warningText}" />
-	    </div>    
-    </div>
-</h:form>    
- </h:body>
+	<p:panelGrid columns="4" cellpadding="5" >
+    	<h:outputLabel for="nameText" value="Name:" style="font-weight:bold" />
+	    <p:inputText id="nameText" value="#{reservation.name}" />
+	    <h:outputLabel for="surnameText" value="Surname:" style="font-weight:bold" />
+	    <p:inputText id="surnameText" value="#{reservation.surname}" />			    
+   	    <h:outputLabel for="docIDText" value="Document Number:" style="font-weight:bold" />    	  
+   	    <p:inputText id="docIDText" value="#{reservation.documentId}" />   
+    	<p:commandButton id ="buttonSaveReservation" value="Save" action="#{reservation.saveReservation}" update="warningLabel" icon="ui-icon-check" />	
+   	    <h:outputLabel id="warningLabel" value="#{reservation.warningText}" />
+ 	</p:panelGrid>
+</h:form> 
+
+</ui:define>
+</ui:composition>
+
+</h:body>
  </html>
