@@ -3,8 +3,8 @@ package com.reservation.pojo;
 import java.lang.reflect.Field;
 import java.util.Date;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 
 import com.reservation.dao.*;
 import com.reservation.util.Util;
@@ -13,6 +13,7 @@ import com.sun.faces.context.SessionMap;
 @ManagedBean(name = "reservation", eager = true)
 @SessionScoped
 public class Reservation {
+
 	
 	private String reservationNumber;
 	private String name;
@@ -21,18 +22,20 @@ public class Reservation {
 	private String issueDate;
 	private String documentId;
 	
-	private String showReservationAction;
 	private String warningText;
-	private boolean isReservationAlreadyCreated;
 	public static DatabaseOperations dbObj;
 	private static final long serialVersionUID = 1L;
-	
-	public Reservation(){
-		//TODO: Change 'index' to ShowReservation when the .xhtml is changed.
-		showReservationAction = "index";
-		System.out.println("Initializing the Reservation Class");
+	@ManagedProperty(value="#{showreservation}")
+	public ShowReservation showReservation;
+
+	public void setShowReservation(ShowReservation showRes) {
+		this.showReservation = showRes;
 	}
 	
+
+	public Reservation(){
+		System.out.println("Initializing the Reservation Class");
+	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Database Related Methods //////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -83,38 +86,30 @@ public class Reservation {
 		dbObj.deleteReservation(this);
 	}	
 
-	public void setAsReservationAlreadyCreated(boolean value) {
-		isReservationAlreadyCreated = value;
-	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Navigation Methods ////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
-	
+
 	public String navigateToShowReservation() {
 		System.out.println("Entered navigateToShowReservation() Method");
-		setWarningText(""); 
-		
-		if(isReservationAlreadyCreated)//Since the query returned with existing reservation, 
+		warningText="";
+		//initialize();
+		//showReservation.setSayWelcome("asd");
+		if(showReservation.isReservationAlreadyCreated())//Since the query returned with existing reservation, 
 									   //Adopting the showreservation page by getting reservation with current info on page
 		{
 			System.out.println("Existing reservation detected, information will be fetched from database before redirecting");
 			getReservationByDocID();
-			return "index";
+			showReservation.setReservationAlreadyCreated(false); 
+			return "ShowReservation";
 		}else
 		{
 			initialize();
-			return "index";
+			return "ShowReservation";
 		}
 	}
 	
-	public String navigateToShowReservationAfterQuery() {
-	
-		System.out.println("Entered to navigateToShowReservationAfterQuery function");
-		getReservationByResNum();
-		return "index";
-		
-	}
 	
 	public String navigateToNewReservation() {
 		
@@ -131,8 +126,9 @@ public class Reservation {
 		name = "";
 		surname = "";		
 		reservationDate = "";
+		issueDate = "";
 		warningText = "";
-		
+		showReservation.initialize(); 
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -191,28 +187,19 @@ public class Reservation {
 		this.documentId = documentId;
 	}
 	
-
-
 	public String getWarningText() {
 		return warningText;
 	}
 
-
 	public void setWarningText(String warningText) {
 		this.warningText = warningText;
 	}
+		
+	public ShowReservation getShowReservation() {
+		return showReservation;
+	}
 	
 
-	public void setShowReservationAction(String action) {
-		showReservationAction = action;
-	}
-	
-	public String getShowReservationAction() {
-		
-		return showReservationAction;
-		
-	}
-	
 	public String toString() {
 		  StringBuilder result = new StringBuilder();
 		  String newLine = System.getProperty("line.separator");
