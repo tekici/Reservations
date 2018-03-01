@@ -49,25 +49,22 @@ public class DatabaseOperations {
 					call.execute();
 					int returnResult = (int)call.getObject(1);
 					
-					reservation.setAsReservationAlreadyCreated(false);
+					reservation.showReservation.setReservationAlreadyCreated(false);
+					
 					switch (returnResult)
 					{					
 						case 1://Date is Occupied. Can occur when another user allocated that date&hour 
 							   //while current user was in process to create a new reservation.
 						{
 							logger.warning("[SQL] Unique constraint violation [ReservationDate]");
-							reservation.setWarningText("Sorry, the selected date&time is occupied.");
-							//reservation.setShowReservationAction("#{reservation.navigateToShowReservationInit}");
-							//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("showReservationAction",  "#{reservation.navigateToShowReservationInit}");							
+							reservation.setWarningText("Sorry, the selected date&time is occupied.");							
 						}
 						case 2://There is already a reservation for the given DocumentID. 
 							   //Can occur when the user already have a reservation.
 						{
 							logger.warning("[SQL] Unique constraint violation [DocumentID]");
 							reservation.setWarningText("You already have a reservation. Please click \"Show Reservation\" button to see.");
-							reservation.setAsReservationAlreadyCreated(true);
-							//reservation.setShowReservationAction("#{reservation.navigateToShowReservationAfterQuery}");
-							//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("showReservationAction",  "#{reservation.navigateToShowReservationAfterQuery}");
+							reservation.showReservation.setReservationAlreadyCreated(true);
 						}
 					}
 					
