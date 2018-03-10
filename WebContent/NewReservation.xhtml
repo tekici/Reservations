@@ -10,7 +10,8 @@ xmlns:f="http://java.sun.com/jsf/core"
 <h:body>
 <ui:composition template="template.xhtml">
 <ui:define name = "content">
-<h:form>
+<h:form id="resultForm"> 
+	<p:growl id="growl" showDetail="true" sticky="true" />
 	<p:panelGrid columns="4" cellpadding="5" >
     	<h:outputLabel for="nameText" value="Name:" style="font-weight:bold" />
 	    <p:inputText id="nameText" value="#{reservation.name}" />
@@ -18,9 +19,20 @@ xmlns:f="http://java.sun.com/jsf/core"
 	    <p:inputText id="surnameText" value="#{reservation.surname}" />			    
    	    <h:outputLabel for="docIDText" value="Document Number:" style="font-weight:bold" />    	  
    	    <p:inputText id="docIDText" value="#{reservation.documentId}" />   
-    	<p:commandButton id ="buttonSaveReservation" value="Save" action="#{reservation.saveReservation}" update="warningLabel" icon="ui-icon-check" />	
+    	<p:commandButton id ="buttonSaveReservation" value="Create Reservation" action="#{reservation.saveReservation}" update="warningLabel" icon="ui-icon-check" />	
+   	    <p:calendar value="#{reservation.reservationDate}">
+   	    <p:ajax listener="#{reservation.setHoursOnCalendarChange()}" event="dateSelect" update="hoursPanelGrid" />
+   	    </p:calendar>
    	    <h:outputLabel id="warningLabel" value="#{reservation.warningText}" />
  	</p:panelGrid>
+ 	<p:panel id = "hoursPanel">
+ 	<p:panelGrid id = "hoursPanelGrid" columns="4" cellpadding="5" rendered="#{newreservation.hoursFetched}">
+ 		<p:outputLabel for="hoursList" value="Available Hours" />
+        <p:selectOneRadio id="hoursList" value="#{newreservation.selectedHour}"  layout="grid" columns="3">
+            <f:selectItems value="#{newreservation.hoursList}" var="c" itemLabel="#{selectedHour}" itemValue="#{selectedHour}"/>
+        </p:selectOneRadio>
+ 	</p:panelGrid>
+ 	</p:panel>
 </h:form> 
 
 </ui:define>

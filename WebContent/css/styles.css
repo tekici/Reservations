@@ -7,10 +7,13 @@
 
 #top{
 	width : 100%;
+	vertical-align : center;
+	align-content:center;
 	height: 50px;
 	z-index: 100;
 	top:0;
-	background-color: #13654a;
+	background-color: #DF0101;
+	margin : auto;
 	
 }
 

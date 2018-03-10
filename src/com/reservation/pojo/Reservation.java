@@ -1,10 +1,17 @@
 package com.reservation.pojo;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Logger;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+
+import org.primefaces.context.RequestContext;
 
 import com.reservation.dao.*;
 import com.reservation.util.Util;
@@ -18,23 +25,44 @@ public class Reservation {
 	private String reservationNumber;
 	private String name;
 	private String surname;
-	private String reservationDate;
+	private Date reservationDate;
 	private String issueDate;
 	private String documentId;
 	
 	private String warningText;
 	public static DatabaseOperations dbObj;
+	private static Logger logger;
+	
 	private static final long serialVersionUID = 1L;
+	@ManagedProperty(value="#{newreservation}")
+	public NewReservation newReservation;
+
 	@ManagedProperty(value="#{showreservation}")
 	public ShowReservation showReservation;
 
-	public void setShowReservation(ShowReservation showRes) {
-		this.showReservation = showRes;
+	public void setShowReservation(ShowReservation newRes) {
+		this.showReservation = newRes;
+	}
+
+	public void setNewReservation(NewReservation newRes) {
+		this.newReservation = newRes;
 	}
 	
-
 	public Reservation(){
-		System.out.println("Initializing the Reservation Class");
+		dbObj = new DatabaseOperations(this);	
+		logger = Logger.getLogger("NewReservation");
+	}
+	public void initialize() {
+		System.out.println("Initializing the Reservation class members.");
+		
+		reservationNumber = "";
+		documentId = "";
+		name = "";
+		surname = "";		
+		reservationDate = new Date();
+		issueDate = "";
+		warningText = "";
+		showReservation.initialize(); 
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Database Related Methods //////////////////////////////////////////////////////////
@@ -46,8 +74,8 @@ public class Reservation {
 	 */
 	public void getReservationByResNum() {
 		System.out.println("Entered getReservationByResNum() Method");
-		dbObj = new DatabaseOperations();		
-		dbObj.getReservationtByResNum(this);		
+		dbObj.getReservationtByResNum();		
+		System.out.println("showreserveation.getIsReservationFetched() : "+ showReservation.getIsReservationFetched());
 	}
 	/*
 	 * This function is an example of calling PL SQL Function via Hibernate.
@@ -55,58 +83,65 @@ public class Reservation {
 	 */
 	public void getReservationByDocID() {
 		System.out.println("Entered getReservationByDocID() Method");
-		dbObj = new DatabaseOperations();		
-		dbObj.getReservationtByDocID(this);
+		dbObj.getReservationtByDocID();
+		System.out.println("showreserveation.getIsReservationFetched() : "+ showReservation.getIsReservationFetched());
+
 	}
 	/*
 	 * Hibernate utility is used here to insert the new record to database 
 	 * 
 	 */
 	public void saveReservation() {
-		
+
+		System.out.println("Entered saveReservation() Method");
 		reservationNumber = Util.reservationNumberGenerator();
-		reservationDate = "18-02-2018 12:00";		
+		reservationDate = Util.stringToDateFormat(Util.dateToStringFormat(reservationDate,"dd-MM-yyyy")
+				+" "
+				+ newReservation.getSelectedHour().trim(),"dd-MM-yyyy HH:mm");
+		logger.info("reservation date is : " + reservationDate);
+		//reservationDate = "18-02-2018 12:00";		
 		//documentId = "138";
 		System.out.println(this.toString());
 		
-		System.out.println("Entered saveReservation() Method");
-		dbObj = new DatabaseOperations();
-		dbObj.insertReservation(this);
+		dbObj.insertReservation();
 	}
 
 	public void updateReservation() {
 		System.out.println("Entered removeReservation() Method");
-		dbObj = new DatabaseOperations();
-		dbObj.updateReservation(this); 
+		dbObj.updateReservation(); 
 	}
 	
 	public void removeReservation() {
 		System.out.println("Entered removeReservation() Method");
-		dbObj = new DatabaseOperations();
-		dbObj.deleteReservation(this);
+		dbObj.deleteReservation();
 	}	
 
-
+	public void setHoursOnCalendarChange() {
+		logger.info("Entered to the method getFreeHoursOfDay");
+		ArrayList<String> returnList = new ArrayList<String>();
+		returnList = dbObj.getFreeHoursOfDay(Util.dateToStringFormat(reservationDate,"dd-MM-yyyy"));
+		newReservation.setHoursList(returnList);
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////
-	// Navigation Methods ////////////////////////////////////////////////////////////////
+	// Navigation and Update Form Methods ////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	public String navigateToShowReservation() {
 		System.out.println("Entered navigateToShowReservation() Method");
 		warningText="";
-		//initialize();
-		//showReservation.setSayWelcome("asd");
 		if(showReservation.isReservationAlreadyCreated())//Since the query returned with existing reservation, 
-									   //Adopting the showreservation page by getting reservation with current info on page
+		//Adopting the showreservation page by getting reservation with current info on page
 		{
 			System.out.println("Existing reservation detected, information will be fetched from database before redirecting");
 			getReservationByDocID();
 			showReservation.setReservationAlreadyCreated(false); 
-			return "ShowReservation";
+			showReservation.setReservationFetched(true);
+			return "ShowReservation?faces-redirect=true";
 		}else
 		{
 			initialize();
-			return "ShowReservation";
+			return "ShowReservation?faces-redirect=true";
 		}
 	}
 	
@@ -115,22 +150,19 @@ public class Reservation {
 		
 		System.out.println("Entered to navigateToNewReservation function");			
 		initialize();
-		return "NewReservation";
+		return "NewReservation?faces-redirect=true";
 	}
 	
-	public void initialize() {
-		System.out.println("Initializing the Reservation class members.");
-		
-		reservationNumber = "";
-		documentId = "";
-		name = "";
-		surname = "";		
-		reservationDate = "";
-		issueDate = "";
-		warningText = "";
-		showReservation.initialize(); 
+	
+	public void updateResultsForm() {
+		System.out.println("Updating item resultForm");
+		RequestContext.getCurrentInstance().update("resultForm");		
 	}
 	
+	public void updateHoursPanel() {
+		logger.info("Updating item NewReservation.hoursPanel");
+		RequestContext.getCurrentInstance().update("hoursPanel");	
+	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Setter and Getter Methods /////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -159,11 +191,11 @@ public class Reservation {
 		this.surname = surname;
 	}
 
-	public String getReservationDate() {
+	public Date getReservationDate() {
 		return reservationDate;
 	}
 
-	public void setReservationDate(String reservationDate) {
+	public void setReservationDate(Date reservationDate) {
 
 		this.reservationDate = reservationDate;
 		
@@ -228,5 +260,6 @@ public class Reservation {
 		
 		  return result.toString();
 	}
-	
+
+
 }

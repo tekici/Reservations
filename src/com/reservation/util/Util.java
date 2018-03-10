@@ -19,20 +19,36 @@ public class Util {
 		logger = Logger.getLogger("Util");		
 	}
 	
-	public static Date stringToDateFormat(String sDate) {
+	public static Date stringToDateFormat(String sDate, String format) {//yyyy-MM-dd HH:mm:ss
 		
 		Date returnDate = new Date();
-		
-		DateFormat df = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS", Locale.ENGLISH);
+		logger.info("[Util] String Date to convert : " + sDate + " With format: " + format);
+		DateFormat df = new SimpleDateFormat(format, Locale.ENGLISH);
 		try {
 			returnDate = df.parse(sDate);
 		} catch (ParseException e) {
 			// TODO Add logger exception
 			e.printStackTrace();
 		}
-		logger.info("[Util] Converted date is : " + returnDate);
+		logger.info("[Util] Converted string to date as : " + returnDate);
 		return returnDate;
 		
+	}
+	
+	public static String dateToStringFormat(Date dDate, String format) {//dd-MM-YYYY HH:MM
+		System.out.println("Converting the date : " + dDate + " With format: " + format);
+		DateFormat df = new SimpleDateFormat(format, Locale.ENGLISH);
+		String sDate = df.format(dDate);
+		logger.info("[Util] Converted date to String as : " + sDate);
+		return sDate;
+	}
+	
+	public static String dateToSimpleStringFormat(Date dDate) {
+		System.out.println("Converting the date : " + dDate);
+		DateFormat df = new SimpleDateFormat("dd-MM-YYYY", Locale.ENGLISH);
+		String sDate = df.format(dDate);
+		logger.info("[Util] Converted date to String as : " + sDate);
+		return sDate;
 	}
 	
 	public static SQLExceptionType parseException(String exMessage) {
