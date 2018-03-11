@@ -3,28 +3,47 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head></h:head>
-<h:body>
-	<div>
-		<div style="width: %33"></div>
-		<div style="width: %33">
-			<h:form>
-				<h:outputLabel for="resNum" value="Res No:" style="font-weight:bold" />
-				<p:outputLabel id="resNum" value="#{reservation.reservationNumber}" />
-				<h:outputLabel for="nameText" value="ID:" style="font-weight:bold" />
-				<p:inputText id="nameText" value="#{reservation.name}" />			
-
-				<p:commandButton value="Get"
-					action="#{reservation.getReservationByResNum()}"
-					update="nameText,resNum,warningLabel" icon="ui-icon-check" />
-				<p:commandButton value="Update"
-					action="#{reservation.updateReservation()}"
-					update="nameText,resNum,warningLabel" icon="ui-icon-check" />
+<h:body id="modifyReservationBody">
+	<ui:composition template="template.xhtml">
+		<ui:define name="content">
+			<h:form id = "modifyResForm">
+			<p:growl id="modGrowl" showDetail="true" sticky="true" />  
+				<p:panelGrid id="modResultsPanelGrid" columns="4" cellpadding="5" rendered = "#{showreservation.isReservationFetched}">
+					<p:outputLabel for="modNameLabel" value="Name" style="font-weight:bold" />
+					<p:outputLabel id ="modNameLabel" value="#{reservation.name}" style="font-weight:bold" />
+					<p:outputLabel for="modSurnameLabel" value="Surname" style="font-weight:bold" />
+					<p:outputLabel id ="modSurnameLabel" value="#{reservation.surname}" style="font-weight:bold" />
+					<p:outputLabel for="modDocIDLabel" value="Document ID" style="font-weight:bold" />
+					<p:outputLabel id ="moddocIDLabel" value="#{reservation.documentId}" style="font-weight:bold" />
+					<p:outputLabel for="modIssueDateLabel" value="Issue Date" style="font-weight:bold" />
+					<p:outputLabel id ="modIssueDateLabel" value="#{reservation.issueDate}" style="font-weight:bold" />
+					<p:outputLabel for="modResDateLabel" value="Reservation Date" style="font-weight:bold" />
+					<p:outputLabel id ="modResDateLabel" value="#{reservation.reservationDate}" style="font-weight:bold" />
+					<p:outputLabel for="modResNumLabel" value="Reservation Number" style="font-weight:bold" />
+					<p:outputLabel id ="modResNumLabel" value="#{reservation.reservationNumber}"	style="font-weight:bold" />
+				</p:panelGrid>
+				<p:panelGrid id="modQueryPanelGrid" columns="4" cellpadding="5">			
+ 	    			
+   	    			<p:commandButton value="Search" action="#{reservation.getReservationByResNum()}" style="width:120px" 
+   	    			rendered= "#{showreservation.queryWith == 'resnum'}" icon="ui-icon-check" update="modQueryPanelGrid">
+					</p:commandButton>
+				   <p:commandButton value="Search" action="#{reservation.getReservationByDocID()}" style="width:120px" 
+				   rendered= "#{showreservation.queryWith == 'docid'}" icon="ui-icon-check" update="modQueryPanelGrid">
+				   </p:commandButton>
+				</p:panelGrid>				
+				<p:panelGrid columns="4" cellpadding="5">	
+					<p:outputLabel for="modQueryWithDropDown" value="With:"></p:outputLabel>
+				   	<p:selectOneMenu id="modQueryWithDropDown" value="#{showreservation.queryWith}" style = "width:120px">				       
+				       <p:ajax event="change" update="modQueryPanelGrid" ></p:ajax>
+				       <f:selectItem itemLabel="Reservation Number" itemValue="resnum" />
+				       <f:selectItem itemLabel="Document ID" itemValue="docid" />
+				   </p:selectOneMenu>
+				 </p:panelGrid>
 			</h:form>
-		</div>
-		<div style="width: %33"></div>
-	</div>
-
+		</ui:define>
+	</ui:composition>
 </h:body>
 </html>

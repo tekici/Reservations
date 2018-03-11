@@ -24,34 +24,37 @@
 					<p:outputLabel id ="resDateLabel" value="#{reservation.reservationDate}" style="font-weight:bold" />
 					<p:outputLabel for="resNumLabel" value="Reservation Number" style="font-weight:bold" />
 					<p:outputLabel id ="resNumLabel" value="#{reservation.reservationNumber}"	style="font-weight:bold" />
+				</p:panelGrid>						
+				<p:panel id = "docQueryPanel" rendered = "#{showreservation.verifyQueryType('docid')}">
+				<p:panelGrid columns="4" cellpadding="5">	
+				    <p:outputLabel id="docIDTextLabel" for="docIDText" value="Document Number:" style="font-weight:bold" />    	  
+   	    			<p:inputText id="docIDText" value="#{reservation.documentId}" required="true"/>
+   	    			<p:message for="docIDText"/>    
+   	    			<p:commandButton value="Search" action="#{reservation.getReservationByDocID()}" style="width:120px" 
+					   icon="ui-icon-check">
+					</p:commandButton>			   			   	    
 				</p:panelGrid>
-				<p:panelGrid id="queryPanelGrid" columns="4" cellpadding="5">			
-				    <p:outputLabel id="docIDTextLabel" for="docIDText" value="Document Number:" rendered= "#{showreservation.queryWith == 'docid'}" style="font-weight:bold" />    	  
-   	    			<p:inputText id="docIDText" value="#{reservation.documentId}" rendered= "#{showreservation.queryWith == 'docid'}" required="true"/>
-   	    			<p:message for="docIDText" display="text" rendered= "#{showreservation.queryWith == 'docid'}"/>   	    			
-   			   	    <p:outputLabel id="resNumTextLabel" for="resNumText" value="Reservation Number:" rendered= "#{showreservation.queryWith == 'resnum'}" style="font-weight:bold" />    	  
-   	    			<p:inputText id="resNumText" value="#{reservation.reservationNumber}" rendered= "#{showreservation.queryWith == 'resnum'}" required="true"/>
-   	    			<p:message for="resNumText" display="text" rendered= "#{showreservation.queryWith == 'resnum'}"/>   	    			
-   	    			<p:commandButton value="Search" action="#{reservation.getReservationByResNum()}" style="width:120px" 
-   	    			rendered= "#{showreservation.queryWith == 'resnum'}" icon="ui-icon-check" update="queryPanelGrid">
-					</p:commandButton>
-				   <p:commandButton value="Search" action="#{reservation.getReservationByDocID()}" style="width:120px" 
-				   rendered= "#{showreservation.queryWith == 'docid'}" icon="ui-icon-check" update="queryPanelGrid">
-				   </p:commandButton>
-				</p:panelGrid>
+			 	</p:panel>
+			 	<p:panel id = "resNumQueryPanel" rendered = "#{showreservation.verifyQueryType('resnum')}">
+				<p:panelGrid columns="4" cellpadding="5">	
+  			   	    <p:outputLabel id="resNumTextLabel" for="resNumText" value="Reservation Number:" style="font-weight:bold" />    	  
+  	    			<p:inputText id="resNumText" value="#{reservation.reservationNumber}" required="true"/>
+  	    			<p:message for="resNumText"/>   	    			
+  	    			<p:commandButton value="Search" action="#{reservation.getReservationByResNum()}" style="width:120px" 
+  	    			 icon="ui-icon-check">
+				</p:commandButton>
+   	    		</p:panelGrid>
+			 	</p:panel>				
+				
 				<p:panelGrid columns="4" cellpadding="5">	
 					<p:outputLabel for="queryWithDropDown" value="With:"></p:outputLabel>
 				   	<p:selectOneMenu id="queryWithDropDown" value="#{showreservation.queryWith}" style = "width:120px">				       
-				       <p:ajax event="change" update="queryPanelGrid" ></p:ajax>
+				       <p:ajax event="change" update="resultForm" ></p:ajax>
 				       <f:selectItem itemLabel="Reservation Number" itemValue="resnum" />
 				       <f:selectItem itemLabel="Document ID" itemValue="docid" />
 				   </p:selectOneMenu>
 				 </p:panelGrid>
 			</h:form>
-		</ui:define>
-
-		<ui:define name="bottom">
-			<h:outputLabel id="warningLabel" value="#{reservation.warningText}" />
 		</ui:define>
 	</ui:composition>
 </h:body>

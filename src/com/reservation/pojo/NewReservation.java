@@ -18,6 +18,7 @@ public class NewReservation implements Serializable {
 	private ArrayList<String> hoursList;
 	private String selectedHour;
 	private boolean isHoursFetched;
+	private boolean isReservationSuccess;
 		
 	public NewReservation(){
 
@@ -26,11 +27,29 @@ public class NewReservation implements Serializable {
 	}
 	
 	public void initialize() {
-		logger.info("Initializing the NewReservation class members");		
-		hoursList.clear();		
-		
+		System.out.println("Initializing the NewReservation Class");
+		isReservationSuccess = false;		
 	}
 	
+	public boolean isHoursFetched() {
+		return isHoursFetched;
+	}
+
+	public void setHoursFetched(boolean isHoursFetched) {
+		this.isHoursFetched = isHoursFetched;
+	}
+
+	public boolean isReservationSuccess() {
+		return isReservationSuccess;
+	}
+
+	public void setReservationSuccess(boolean isReservationSuccess) {
+		this.isReservationSuccess = isReservationSuccess;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////
+	// Setter and Getter Methods /////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
 	public ArrayList<String> getHoursList() {
 		return hoursList;
 	}
@@ -47,12 +66,5 @@ public class NewReservation implements Serializable {
 		this.selectedHour = selectedHour;
 	}
 
-	public boolean isHoursFetched() {
-		return isHoursFetched;
-	}
-
-	public void setHoursFetched(boolean isHoursFetched) {
-		this.isHoursFetched = isHoursFetched;
-	}
 
 }

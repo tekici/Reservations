@@ -62,6 +62,7 @@ public class DatabaseOperations {
 						{
 							logger.info("[SQL] Successfully inserted the record.");
 							context.addMessage(null, new FacesMessage("Info",  "Your Reservation is Created Successfully.") );
+							reservation.newReservation.setReservationSuccess(true);
 							break;
 						}
 						case 1://Date is Occupied. Can occur when another user allocated that date&hour 

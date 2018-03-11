@@ -1,42 +1,71 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:p="http://primefaces.org/ui"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-<h:head>
-</h:head>
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head></h:head>
 <h:body>
-<ui:composition template="template.xhtml">
-<ui:define name = "content">
-<h:form id="resultForm"> 
-	<p:growl id="growl" showDetail="true" sticky="true" />
-	<p:panelGrid columns="4" cellpadding="5" >
-    	<h:outputLabel for="nameText" value="Name:" style="font-weight:bold" />
-	    <p:inputText id="nameText" value="#{reservation.name}" />
-	    <h:outputLabel for="surnameText" value="Surname:" style="font-weight:bold" />
-	    <p:inputText id="surnameText" value="#{reservation.surname}" />			    
-   	    <h:outputLabel for="docIDText" value="Document Number:" style="font-weight:bold" />    	  
-   	    <p:inputText id="docIDText" value="#{reservation.documentId}" />   
-    	<p:commandButton id ="buttonSaveReservation" value="Create Reservation" action="#{reservation.saveReservation}" update="warningLabel" icon="ui-icon-check" />	
-   	    <p:calendar value="#{reservation.reservationDate}">
-   	    <p:ajax listener="#{reservation.setHoursOnCalendarChange()}" event="dateSelect" update="hoursPanelGrid" />
-   	    </p:calendar>
-   	    <h:outputLabel id="warningLabel" value="#{reservation.warningText}" />
- 	</p:panelGrid>
- 	<p:panel id = "hoursPanel">
- 	<p:panelGrid id = "hoursPanelGrid" columns="4" cellpadding="5" rendered="#{newreservation.hoursFetched}">
- 		<p:outputLabel for="hoursList" value="Available Hours" />
-        <p:selectOneRadio id="hoursList" value="#{newreservation.selectedHour}"  layout="grid" columns="3">
-            <f:selectItems value="#{newreservation.hoursList}" var="c" itemLabel="#{selectedHour}" itemValue="#{selectedHour}"/>
-        </p:selectOneRadio>
- 	</p:panelGrid>
- 	</p:panel>
-</h:form> 
+	<ui:composition template="template.xhtml">
+		<ui:define name="content">
+			<h:form id="resultForm">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+				<p:panelGrid id="newReservationPanel" columns="4" cellpadding="5"
+					rendered="#{!newreservation.reservationSuccess}">
+					<h:outputLabel for="nameText" value="Name:"
+						style="font-weight:bold" />
+					<p:inputText id="nameText" value="#{reservation.name}" />
+					<h:outputLabel for="surnameText" value="Surname:"
+						style="font-weight:bold" />
+					<p:inputText id="surnameText" value="#{reservation.surname}" />
+					<h:outputLabel for="docIDText" value="Document Number:"
+						style="font-weight:bold" />
+					<p:inputText id="docIDText" value="#{reservation.documentId}" />
+					<p:commandButton id="buttonSaveReservation"
+						value="Create Reservation"
+						action="#{reservation.saveReservation()}" update="warningLabel"
+						icon="ui-icon-check" />
+					<p:calendar value="#{reservation.reservationDate}">
+						<p:ajax listener="#{reservation.setHoursOnCalendarChange()}"
+							event="dateSelect" update="hoursPanelGrid" />
+					</p:calendar>
+					<h:outputLabel id="warningLabel" value="#{reservation.warningText}" />
+				</p:panelGrid>
+				<p:panel id="hoursPanel"
+					rendered="#{!newreservation.reservationSuccess}">
+					<p:panelGrid id="hoursPanelGrid" columns="4" cellpadding="5"
+						rendered="#{newreservation.hoursFetched}">
+						<p:outputLabel for="hoursList" value="Available Hours" />
+						<p:selectOneRadio id="hoursList"
+							value="#{newreservation.selectedHour}" layout="grid" columns="3">
+							<f:selectItems value="#{newreservation.hoursList}" var="c"
+								itemLabel="#{selectedHour}" itemValue="#{selectedHour}" />
+						</p:selectOneRadio>
+					</p:panelGrid>
+				</p:panel>
+				<p:panelGrid id="reservationSuccessPanelGrid" columns="4" cellpadding="5" rendered="#{newreservation.reservationSuccess}">
 
-</ui:define>
-</ui:composition>
+					<img src="images/success.png"></img>
+					<p:outputLabel for="nameLabel" value="Name" style="font-weight:bold" />
+					<p:outputLabel id ="nameLabel" value="#{reservation.name}" style="font-weight:bold" />
+					<p:outputLabel for="surnameLabel" value="Surname" style="font-weight:bold" />
+					<p:outputLabel id ="surnameLabel" value="#{reservation.surname}" style="font-weight:bold" />
+					<p:outputLabel for="docIDLabel" value="Document ID" style="font-weight:bold" />
+					<p:outputLabel id ="docIDLabel" value="#{reservation.documentId}" style="font-weight:bold" />
+					<p:outputLabel for="issueDateLabel" value="Issue Date" style="font-weight:bold" />
+					<p:outputLabel id ="issueDateLabel" value="#{reservation.issueDate}" style="font-weight:bold" />
+					<p:outputLabel for="resDateLabel" value="Reservation Date" style="font-weight:bold" />
+					<p:outputLabel id ="resDateLabel" value="#{reservation.reservationDate}" style="font-weight:bold" />
+					<p:outputLabel for="resNumLabel" value="Reservation Number" style="font-weight:bold" />
+					<p:outputLabel id ="resNumLabel" value="#{reservation.reservationNumber}"	style="font-weight:bold" />
+
+				</p:panelGrid>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
 
 </h:body>
- </html>
+</html>

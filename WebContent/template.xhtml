@@ -14,9 +14,9 @@
 	<div id = "mainframe">
 		<div id = "top">
 			<ui:insert name="top"></ui:insert>
-			<p:commandButton value= "New Reservation" action="#{reservation.navigateToNewReservation()}"/> 		
-		    <p:commandButton value= "Show Reservation" action="#{reservation.navigateToShowReservation()}"/>
-        	<p:commandButton value= "Modify Reservation" action="ShowReservation"/>
+			<p:commandButton value= "New Reservation" action="#{reservation.navigateToNewReservation()}" immediate="true"/> 		
+		    <p:commandButton value= "Show Reservation" action="#{reservation.navigateToShowReservation()}" immediate="true"/>
+        	<p:commandButton value= "Modify Reservation" action="#{reservation.navigateToModifyReservation()}" immediate="true"/>
 		</div>
 
 		<div>

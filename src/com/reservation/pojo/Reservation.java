@@ -1,5 +1,6 @@
 package com.reservation.pojo;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.servlet.http.HttpServletResponse;
 
 import org.primefaces.context.RequestContext;
 
@@ -52,6 +54,10 @@ public class Reservation {
 		dbObj = new DatabaseOperations(this);	
 		logger = Logger.getLogger("NewReservation");
 	}
+	/*
+	 * This function will initialize all members of reservation class
+	 * showReservation and newReservation classes.
+	 */
 	public void initialize() {
 		System.out.println("Initializing the Reservation class members.");
 		
@@ -63,6 +69,7 @@ public class Reservation {
 		issueDate = "";
 		warningText = "";
 		showReservation.initialize(); 
+		newReservation.initialize();
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Database Related Methods //////////////////////////////////////////////////////////
@@ -145,6 +152,10 @@ public class Reservation {
 		}
 	}
 	
+	public String navigateToModifyReservation() {
+		System.out.println("Entered navigateToModifyReservation() Method");
+		return "ModifyReservation?faces-redirect=true";
+	}
 	
 	public String navigateToNewReservation() {
 		
@@ -152,8 +163,11 @@ public class Reservation {
 		initialize();
 		return "NewReservation?faces-redirect=true";
 	}
-	
-	
+	/*
+	 * This function will update the resultForm that is common for all .xhtml pages
+	 * So the content will be uptated depending on the current instance with the same name 
+	 * resultForm
+	 */
 	public void updateResultsForm() {
 		System.out.println("Updating item resultForm");
 		RequestContext.getCurrentInstance().update("resultForm");		
