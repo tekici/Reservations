@@ -23,6 +23,7 @@ public class ShowReservation implements Serializable {
 	
 	public ShowReservation() {
 
+		System.out.println("ShowReservation constructor");
 		initialize();
 	}
 	

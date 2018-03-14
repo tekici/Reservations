@@ -26,6 +26,10 @@
     <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
     <param-value>resources.application</param-value>
   </context-param>
+  <context-param>
+   <param-name>primefaces.FONT_AWESOME</param-name>
+   <param-value>true</param-value>
+  </context-param>
   <mime-mapping>
 	<extension>jsp</extension>
 	<mime-type>application/xml</mime-type>

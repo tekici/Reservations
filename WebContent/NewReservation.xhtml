@@ -21,16 +21,15 @@
 					<p:inputText id="surnameText" value="#{reservation.surname}" />
 					<h:outputLabel for="docIDText" value="Document Number:"
 						style="font-weight:bold" />
-					<p:inputText id="docIDText" value="#{reservation.documentId}" />
-					<p:commandButton id="buttonSaveReservation"
-						value="Create Reservation"
-						action="#{reservation.saveReservation()}" update="warningLabel"
-						icon="ui-icon-check" />
+					<p:inputText id="docIDText" value="#{reservation.documentId}" />					
 					<p:calendar value="#{reservation.reservationDate}">
 						<p:ajax listener="#{reservation.setHoursOnCalendarChange()}"
 							event="dateSelect" update="hoursPanelGrid" />
 					</p:calendar>
-					<h:outputLabel id="warningLabel" value="#{reservation.warningText}" />
+					<p:commandButton id="buttonSaveReservation"
+						value="Create Reservation"
+						action="#{reservation.saveReservation()}" 
+						icon="ui-icon-check" />
 				</p:panelGrid>
 				<p:panel id="hoursPanel"
 					rendered="#{!newreservation.reservationSuccess}">
@@ -44,9 +43,10 @@
 						</p:selectOneRadio>
 					</p:panelGrid>
 				</p:panel>
-				<p:panelGrid id="reservationSuccessPanelGrid" columns="4" cellpadding="5" rendered="#{newreservation.reservationSuccess}">
-
-					<img src="images/success.png"></img>
+				
+				<p:panel rendered="#{newreservation.reservationSuccess}">
+				<img src="images/success.png"></img>
+				<p:panelGrid id="reservationSuccessPanelGrid" columns="4" cellpadding="5">					
 					<p:outputLabel for="nameLabel" value="Name" style="font-weight:bold" />
 					<p:outputLabel id ="nameLabel" value="#{reservation.name}" style="font-weight:bold" />
 					<p:outputLabel for="surnameLabel" value="Surname" style="font-weight:bold" />
@@ -59,8 +59,8 @@
 					<p:outputLabel id ="resDateLabel" value="#{reservation.reservationDate}" style="font-weight:bold" />
 					<p:outputLabel for="resNumLabel" value="Reservation Number" style="font-weight:bold" />
 					<p:outputLabel id ="resNumLabel" value="#{reservation.reservationNumber}"	style="font-weight:bold" />
-
 				</p:panelGrid>
+				</p:panel>
 
 			</h:form>
 

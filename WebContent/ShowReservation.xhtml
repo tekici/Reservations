@@ -31,8 +31,9 @@
    	    			<p:inputText id="docIDText" value="#{reservation.documentId}" required="true"/>
    	    			<p:message for="docIDText"/>    
    	    			<p:commandButton value="Search" action="#{reservation.getReservationByDocID()}" style="width:120px" 
-					   icon="ui-icon-check">
-					</p:commandButton>			   			   	    
+					   icon="ui-icon-check"/>
+					<p:commandButton value= "Modify Reservation" action="#{reservation.navigateToModifyReservation()}" immediate="true"
+					rendered = "#{showreservation.isReservationFetched}"/>					
 				</p:panelGrid>
 			 	</p:panel>
 			 	<p:panel id = "resNumQueryPanel" rendered = "#{showreservation.verifyQueryType('resnum')}">
@@ -41,8 +42,9 @@
   	    			<p:inputText id="resNumText" value="#{reservation.reservationNumber}" required="true"/>
   	    			<p:message for="resNumText"/>   	    			
   	    			<p:commandButton value="Search" action="#{reservation.getReservationByResNum()}" style="width:120px" 
-  	    			 icon="ui-icon-check">
-				</p:commandButton>
+  	    			 icon="ui-icon-check"/>
+  	    			 <p:commandButton value= "Modify Reservation" action="#{reservation.navigateToModifyReservation()}" immediate="true"
+  	    			 rendered = "#{showreservation.isReservationFetched}"/>				
    	    		</p:panelGrid>
 			 	</p:panel>				
 				

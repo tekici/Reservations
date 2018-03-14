@@ -51,6 +51,8 @@ public class Reservation {
 	}
 	
 	public Reservation(){
+
+		System.out.println("Reservation constructor");
 		dbObj = new DatabaseOperations(this);	
 		logger = Logger.getLogger("NewReservation");
 	}
@@ -68,13 +70,15 @@ public class Reservation {
 		reservationDate = new Date();
 		issueDate = "";
 		warningText = "";
+		
+		//setHoursOnCalendarChange();//For the initial date
 		showReservation.initialize(); 
 		newReservation.initialize();
+
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Database Related Methods //////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////
-	
+	//////////////////////////////////////////////////////////////////////////////////////	
 	/*
 	 * This function is an example of calling PL SQL Function via Hibernate.
 	 * See the DatabaseOperations.getReservationByResNum function to see the method in Model class.
@@ -114,7 +118,14 @@ public class Reservation {
 	}
 
 	public void updateReservation() {
-		System.out.println("Entered removeReservation() Method");
+		System.out.println("Entered updateReservation() Method");
+		reservationDate = Util.stringToDateFormat(Util.dateToStringFormat(reservationDate,"dd-MM-yyyy")
+				+" "
+				+ newReservation.getSelectedHour().trim(),"dd-MM-yyyy HH:mm");
+		logger.info("reservation date is : " + reservationDate);
+		//reservationDate = "18-02-2018 12:00";		
+		//documentId = "138";
+		System.out.println(this.toString());
 		dbObj.updateReservation(); 
 	}
 	
@@ -137,6 +148,7 @@ public class Reservation {
 	public String navigateToShowReservation() {
 		System.out.println("Entered navigateToShowReservation() Method");
 		warningText="";
+		
 		if(showReservation.isReservationAlreadyCreated())//Since the query returned with existing reservation, 
 		//Adopting the showreservation page by getting reservation with current info on page
 		{
@@ -154,7 +166,7 @@ public class Reservation {
 	
 	public String navigateToModifyReservation() {
 		System.out.println("Entered navigateToModifyReservation() Method");
-		return "ModifyReservation?faces-redirect=true";
+		return "ModifyReservation";
 	}
 	
 	public String navigateToNewReservation() {

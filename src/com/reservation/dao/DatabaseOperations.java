@@ -193,6 +193,7 @@ public class DatabaseOperations {
 					else {
 						logger.info("[SQL Query Result is empty]");
 						context.addMessage(null, new FacesMessage("Warning",  "Could not find the reservation") );
+						reservation.initialize();
 					}
 					//while(cursor.next()) {}
 				}catch (Exception ex) 
@@ -202,6 +203,7 @@ public class DatabaseOperations {
 					FacesContext context = FacesContext.getCurrentInstance();
 					context.addMessage(null, new FacesMessage("Failure",  "An Error Occurred while getting the reservation. Please contact with Administrator.") );					
 					ex.printStackTrace();
+					reservation.initialize();					
 				}finally
 				{
 					connection.commit();					
@@ -258,6 +260,7 @@ public class DatabaseOperations {
 					else {
 						logger.info("[SQL Query Result is empty]");
 						context.addMessage(null, new FacesMessage("Warning",  "Could not find the reservation") );
+						reservation.initialize();
 					}
 				}catch (Exception ex) 
 				{
@@ -266,6 +269,7 @@ public class DatabaseOperations {
 					FacesContext context = FacesContext.getCurrentInstance();
 					context.addMessage(null, new FacesMessage("Failure",  "An Error Occurred while getting the reservation. Please contact with Administrator.") );
 					ex.printStackTrace();
+					reservation.initialize();
 				}finally
 				{
 					connection.commit();			
@@ -277,34 +281,96 @@ public class DatabaseOperations {
 		});
 		
 	}
+	/*
+	 * Using the PL SQL Function FUNRES_UPDATERESBYRESNUM 
+	 * 
+	 */
 	public void updateReservation() {
 
-		System.out.println("Reservation With Reservation Number: " + reservation.getReservationNumber() + " is being updated");
+		String resNum = reservation.getReservationNumber();
+		System.out.println("Updating Reservation With Reservation Number: " + resNum);
 		
-		try {
-			transObj = sessionObj.beginTransaction();
-			sessionObj.update(reservation);
+		sessionObj.doWork(new Work() {
 
-		} catch (Exception exceptionObj) {
-			//Here need to parse the exception to determine if it is a duplicate record, and return a value to the 
-			//Reservation.java class for determining what to update on View jsp page.
-			exceptionObj.printStackTrace();
-		} finally {
-			transObj.commit();
-		}
+			@Override
+			public void execute(Connection connection) throws SQLException {
+
+				CallableStatement call = connection.prepareCall("{? = call TURGAY.FUNRES_UPDATERESBYRESNUM(?,?,?,?,?)}");
+				try {
+					FacesContext context = FacesContext.getCurrentInstance();
+					call.registerOutParameter(1,OracleTypes.INTEGER);
+					call.setString(2, reservation.getReservationNumber());
+					call.setString(3, reservation.getName());
+					call.setString(4, reservation.getSurname());
+					call.setString(5, Util.dateToStringFormat(reservation.getReservationDate(),"dd-MM-yyyy HH:mm"));
+					call.setString(6, reservation.getDocumentId());
+					call.execute();
+					int returnResult = (int)call.getObject(1);
+					
+					reservation.showReservation.setReservationAlreadyCreated(false);
+					
+					switch (returnResult)
+					{	
+						case 0://Insert Success
+						{
+							logger.info("[SQL] Successfully inserted the record.");
+							context.addMessage(null, new FacesMessage("Info",  "Your Reservation is Updated Successfully.") );
+							reservation.newReservation.setReservationSuccess(true);
+							break;
+						}
+						case 1://Date is Occupied. Can occur when another user allocated that date&hour 
+							   //while current user was in process to create a new reservation.
+						{
+							logger.warning("[SQL] Unique constraint violation [ReservationDate]");
+							context.addMessage(null, new FacesMessage("Warning",  "Sorry, the selected date&time is occupied.") );
+							break;
+				
+						}
+						case 2://There is already a reservation for the given DocumentID. 
+							   //Can occur when the user already have a reservation.
+						{
+							logger.warning("[SQL] Unique constraint violation [DocumentID]");
+							context.addMessage(null, new FacesMessage("Warning",  "There is already a reservation with given DocumentID. Please click \"Show Reservation\" button to see.") );
+							reservation.showReservation.setReservationAlreadyCreated(true);
+							break;
+						}
+						default :
+						{
+							logger.warning("[SQL] The return response could not be resolved: " + returnResult);
+							context.addMessage(null, new FacesMessage("Warning",  "An Error Occurred while creating your reservation. Please contact with Administrator.") );							
+						}
+						
+					}
+
+					}catch (Exception ex) 
+					{
+						logger.severe("[SQL] Exception is thrown while executing [TURGAY.FUNRES_GETRESERVATIONBYRESNUM] for ResNum: " 
+						+ reservation.getReservationNumber());
+						FacesContext context = FacesContext.getCurrentInstance();
+						context.addMessage(null, new FacesMessage("Warning",  "An Error Occurred while creating your reservation. Please contact with Administrator.") );
+						
+						ex.printStackTrace();
+					}finally
+					{
+						connection.commit();	
+					}
+				
+				reservation.updateResultsForm();//Updating the common results form to show the results
+				
+			}
+			
+		});
 		
 	}
 	public void deleteReservation() {
 
-		System.out.println("Reservation With Reservation Number: " + reservation.getReservationNumber() + " is being updated");
+		System.out.println("Reservation With Reservation Number: " + reservation.getReservationNumber() + " is being deleted");
 		
 		try {
 			transObj = sessionObj.beginTransaction();
 			sessionObj.delete(reservation);
 
 		} catch (Exception exceptionObj) {
-			//Here need to parse the exception to determine if it is a duplicate record, and return a value to the 
-			//Reservation.java class for determining what to update on View jsp page.
 			exceptionObj.printStackTrace();
 		} finally {
 			transObj.commit();

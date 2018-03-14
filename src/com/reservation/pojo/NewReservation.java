@@ -21,8 +21,9 @@ public class NewReservation implements Serializable {
 	private boolean isReservationSuccess;
 		
 	public NewReservation(){
-
+		System.out.println("NewReservation constructor");
 		logger = Logger.getLogger("NewReservation");
+		initialize();
 		
 	}
 	
